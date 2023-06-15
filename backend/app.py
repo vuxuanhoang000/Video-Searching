@@ -129,13 +129,17 @@ def search():
             cells_per_block=(2, 2),
             visualize=True,
         )
+        print("--------------------------------------------------------------------------")
+        print(f"{file.filename}\nVector đặc trưng ảnh đầu vào: {feature_vector}\nĐộ dài vector :{len(feature_vector)}\n")
         file = open("instance/kd-tree.pk", "rb")
         kdtree = pickle.load(file)
         file.close()
         frames = Frame.query.all()
         distance, index = kdtree.query(feature_vector)
         nearest_frame = frames[index]
-
+        print(f"Vector gần giống nhất: {nearest_frame.feature_vector}\nĐộ dài: {len(nearest_frame.feature_vector)}\nVideo: {nearest_frame.video.path}")
+        print(f"MSE: {mean_squared_error(nearest_frame.feature_vector,feature_vector)}")
+        print("--------------------------------------------------------------------------")
         return jsonify(
             {
                 "error": False,
